@@ -3,59 +3,555 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Valid Anagram - Visualization</title>
-    <link rel="stylesheet" href="../../../style.css" />
+    <title>Valid Anagram Visualization</title>
+    <style>
+      :root {
+        --bg-color: #0f172a;
+        --surface-color: #1e293b;
+        --primary-color: #3b82f6;
+        --secondary-color: #10b981;
+        --error-color: #ef4444;
+        --text-color: #f8fafc;
+        --muted-color: #94a3b8;
+        --border-color: #334155;
+        --highlight-color: #f59e0b;
+      }
+
+      body {
+        font-family:
+          'Inter',
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        line-height: 1.6;
+        margin: 0;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 800px;
+        width: 100%;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 2rem;
+        text-align: center;
+        background: linear-gradient(
+          135deg,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .controls {
+        background-color: var(--surface-color);
+        padding: 1.5rem;
+        border-radius: 1rem;
+        box-shadow:
+          0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        border: 1px solid var(--border-color);
+        display: grid;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        text-align: center;
+      }
+
+      .inputs-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+
+      .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: left;
+      }
+
+      label {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--muted-color);
+      }
+
+      input {
+        background-color: var(--bg-color);
+        border: 1px solid var(--border-color);
+        color: var(--text-color);
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        transition: border-color 0.2s;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+      }
+
+      button {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 1.1rem;
+        margin-top: 1rem;
+        width: fit-content;
+        justify-self: center;
+      }
+
+      button:hover {
+        background-color: #2563eb;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+      }
+
+      button:active {
+        transform: translateY(0);
+      }
+
+      button:disabled {
+        background-color: var(--muted-color);
+        cursor: not-allowed;
+        transform: none;
+        opacity: 0.7;
+      }
+
+      .visualization-area {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .strings-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+      }
+
+      .string-display {
+        background-color: var(--surface-color);
+        padding: 1.5rem;
+        border-radius: 1rem;
+        border: 1px solid var(--border-color);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        min-height: 80px;
+      }
+
+      .char-box {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: var(--bg-color);
+        border: 1px solid var(--border-color);
+        border-radius: 0.5rem;
+        font-weight: 700;
+        font-size: 1.25rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+      }
+
+      .char-box.active {
+        border-color: var(--highlight-color);
+        background-color: rgba(245, 158, 11, 0.1);
+        transform: translateY(-8px);
+        box-shadow: 0 8px 16px rgba(245, 158, 11, 0.2);
+        z-index: 10;
+      }
+
+      .char-box.active::after {
+        content: '↑';
+        position: absolute;
+        bottom: -25px;
+        color: var(--highlight-color);
+        font-size: 1.5rem;
+        animation: bounce 1s infinite;
+      }
+
+      .char-box.processed {
+        border-color: var(--secondary-color);
+        color: var(--secondary-color);
+        opacity: 0.7;
+      }
+
+      .frequency-map {
+        grid-column: 1 / -1;
+        background-color: var(--surface-color);
+        padding: 1.5rem;
+        border-radius: 1rem;
+        border: 1px solid var(--border-color);
+      }
+
+      .map-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-top: 1rem;
+        justify-content: center;
+      }
+
+      .map-item {
+        background-color: var(--bg-color);
+        border: 1px solid var(--border-color);
+        border-radius: 0.5rem;
+        padding: 0.75rem;
+        text-align: center;
+        transition: all 0.3s;
+        min-width: 60px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .map-item.updated {
+        border-color: var(--highlight-color);
+        background-color: rgba(245, 158, 11, 0.1);
+        transform: scale(1.1);
+        box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
+      }
+
+      .map-key {
+        font-size: 1rem;
+        color: var(--muted-color);
+        margin-bottom: 0.25rem;
+        font-family: monospace;
+      }
+
+      .map-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-color);
+      }
+
+      .status-message {
+        text-align: center;
+        font-size: 1.25rem;
+        font-weight: 600;
+        min-height: 3rem;
+        margin-bottom: 2rem;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        background-color: var(--surface-color);
+        border: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+      }
+
+      .status-message.success {
+        color: var(--secondary-color);
+        border-color: var(--secondary-color);
+        background-color: rgba(16, 185, 129, 0.1);
+      }
+
+      .status-message.error {
+        color: var(--error-color);
+        border-color: var(--error-color);
+        background-color: rgba(239, 68, 68, 0.1);
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.1);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      @keyframes bounce {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-5px);
+        }
+      }
+
+      /* Mobile Responsive */
+      @media (max-width: 640px) {
+        .strings-container {
+          grid-template-columns: 1fr;
+        }
+        .inputs-row {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
   </head>
   <body>
-    <main>
-      <h1>Valid Anagram</h1>
-      <div id="controls">
-        <button id="run-btn">Run Visualization</button>
-      </div>
-      <div
-        id="status-message"
-        style="margin-top: 1rem; color: var(--accent-color)"
-      >
-        Ready to run...
-      </div>
+    <div class="container">
+      <h1>Valid Anagram Visualizer</h1>
 
-      <div style="display: flex; gap: 2rem; margin-top: 2rem">
-        <div>
-          <h3>String S</h3>
-          <div class="visualization-container" id="s-container"></div>
+      <div class="controls">
+        <div class="inputs-row">
+          <div class="input-group">
+            <label for="str1">String 1 (Source)</label>
+            <input
+              type="text"
+              id="str1"
+              value="anagram"
+              placeholder="Enter first string"
+            />
+          </div>
+          <div class="input-group">
+            <label for="str2">String 2 (Target)</label>
+            <input
+              type="text"
+              id="str2"
+              value="nagaram"
+              placeholder="Enter second string"
+            />
+          </div>
         </div>
-        <div>
-          <h3>String T</h3>
-          <div class="visualization-container" id="t-container"></div>
+        <button id="visualizeBtn">Start Visualization</button>
+      </div>
+
+      <div id="statusMessage" class="status-message">Ready to visualize...</div>
+
+      <div class="visualization-area">
+        <div class="strings-container">
+          <div>
+            <label
+              style="display: block; margin-bottom: 0.5rem; text-align: center"
+              >String 1 Analysis</label
+            >
+            <div id="displayStr1" class="string-display"></div>
+          </div>
+          <div>
+            <label
+              style="display: block; margin-bottom: 0.5rem; text-align: center"
+              >String 2 Analysis</label
+            >
+            <div id="displayStr2" class="string-display"></div>
+          </div>
+        </div>
+
+        <div class="frequency-map">
+          <label style="display: block; margin-bottom: 0.5rem"
+            >Frequency Map (Hash Table)</label
+          >
+          <div id="freqMap" class="map-grid">
+            <div style="color: var(--muted-color); font-style: italic">
+              Map is empty
+            </div>
+          </div>
         </div>
       </div>
-    </main>
-    <script type="module">
-      import {
-        createArrayElement,
-        logStatus,
-        delay,
-      } from '../../../utils/visualizer-utils.js';
+    </div>
 
-      const s = 'anagram';
-      const t = 'nagaram';
+    <script>
+      const str1Input = document.getElementById('str1');
+      const str2Input = document.getElementById('str2');
+      const visualizeBtn = document.getElementById('visualizeBtn');
+      const displayStr1 = document.getElementById('displayStr1');
+      const displayStr2 = document.getElementById('displayStr2');
+      const freqMapContainer = document.getElementById('freqMap');
+      const statusMessage = document.getElementById('statusMessage');
 
-      // Simple usage example
-      const sContainer = document.getElementById('s-container');
-      s.split('').forEach((char) =>
-        sContainer.appendChild(createArrayElement(char)),
-      );
+      const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-      const tContainer = document.getElementById('t-container');
-      t.split('').forEach((char) =>
-        tContainer.appendChild(createArrayElement(char)),
-      );
+      function createCharBox(char) {
+        const el = document.createElement('div');
+        el.className = 'char-box';
+        el.textContent = char;
+        return el;
+      }
 
-      document.getElementById('run-btn').addEventListener('click', () => {
-        logStatus(
-          'This is a template. Implement animation login in the script tag!',
-        );
-      });
+      function createMapItem(char, count) {
+        const el = document.createElement('div');
+        el.className = 'map-item';
+        el.id = `map-${char}`;
+        el.dataset.char = char; // Store char for easy efficient lookup if needed
+        el.innerHTML = `
+                <div class="map-key">'${char}'</div>
+                <div class="map-value">${count}</div>
+            `;
+        return el;
+      }
+
+      function updateMapItem(char, count) {
+        let el = document.getElementById(`map-${char}`);
+
+        // If the element doesn't exist, create it
+        if (!el) {
+          // If it's the first item, clear the "Map is empty" text
+          if (
+            freqMapContainer.children.length > 0 &&
+            freqMapContainer.children[0].textContent === 'Map is empty'
+          ) {
+            freqMapContainer.innerHTML = '';
+          }
+          el = createMapItem(char, count);
+          freqMapContainer.appendChild(el);
+        }
+
+        // Update value
+        el.querySelector('.map-value').textContent = count;
+
+        // Trigger animation
+        el.classList.remove('updated');
+        void el.offsetWidth; // Trigger reflow
+        el.classList.add('updated');
+
+        // Remove animation class after it plays so it can be replayed cleanly
+        setTimeout(() => {
+          if (el) el.classList.remove('updated');
+        }, 500);
+      }
+
+      // Helper to reset visuals
+      function resetVisuals() {
+        displayStr1.innerHTML = '';
+        displayStr2.innerHTML = '';
+        freqMapContainer.innerHTML =
+          '<div style="color: var(--muted-color); font-style: italic;">Map is empty</div>';
+        statusMessage.className = 'status-message';
+        statusMessage.textContent = 'Initializing...';
+      }
+
+      async function visualize() {
+        if (visualizeBtn.disabled) return;
+
+        visualizeBtn.disabled = true;
+        visualizeBtn.textContent = 'Running...';
+
+        const s1 = str1Input.value.trim();
+        const s2 = str2Input.value.trim();
+
+        resetVisuals();
+
+        // Initial render of strings
+        const s1Els = s1.split('').map((c) => createCharBox(c));
+        const s2Els = s2.split('').map((c) => createCharBox(c));
+        s1Els.forEach((el) => displayStr1.appendChild(el));
+        s2Els.forEach((el) => displayStr2.appendChild(el));
+
+        await delay(800);
+
+        // Step 1: Check Lengths
+        statusMessage.textContent = `Phase 1: Checking Lengths... (${s1.length} vs ${s2.length})`;
+        await delay(1000);
+
+        if (s1.length !== s2.length) {
+          statusMessage.textContent = `Lengths differ! ${s1.length} ≠ ${s2.length}. Not an anagram.`;
+          statusMessage.classList.add('error');
+          visualizeBtn.disabled = false;
+          visualizeBtn.textContent = 'Start Visualization';
+          return;
+        }
+
+        statusMessage.textContent =
+          'Lengths match! Proceeding to build Frequency Map...';
+        await delay(1000);
+
+        const map = {};
+
+        // Phase 2: Build Map
+        for (let i = 0; i < s1.length; i++) {
+          const char = s1[i];
+          s1Els[i].classList.add('active');
+
+          statusMessage.textContent = `Reading '${char}' from String 1...`;
+          await delay(600);
+
+          statusMessage.textContent = `Incrementing count for '${char}'`;
+          map[char] = (map[char] || 0) + 1;
+          updateMapItem(char, map[char]);
+
+          await delay(800);
+          s1Els[i].classList.remove('active');
+          s1Els[i].classList.add('processed');
+        }
+
+        statusMessage.textContent =
+          'Frequency Map Built. Phase 3: Verifying with String 2...';
+        await delay(1200);
+
+        // Phase 3: Verify Map
+        for (let i = 0; i < s2.length; i++) {
+          const char = s2[i];
+          s2Els[i].classList.add('active');
+
+          statusMessage.textContent = `Reading '${char}' from String 2...`;
+          await delay(600);
+
+          // Check if char exists in map
+          if (!map[char]) {
+            statusMessage.textContent = `Error: '${char}' not found or count is already 0!`;
+            statusMessage.classList.add('error');
+
+            // Highlight the failure point
+            const mapItem = document.getElementById(`map-${char}`);
+            if (mapItem) {
+              mapItem.style.borderColor = 'var(--error-color)';
+              mapItem.style.backgroundColor = 'rgba(239, 68, 68, 0.2)';
+            }
+
+            s2Els[i].style.borderColor = 'var(--error-color)';
+            s2Els[i].style.backgroundColor = 'rgba(239, 68, 68, 0.2)';
+
+            visualizeBtn.disabled = false;
+            visualizeBtn.textContent = 'Start Visualization';
+            return;
+          }
+
+          statusMessage.textContent = `Decrementing count for '${char}'`;
+          map[char]--;
+          updateMapItem(char, map[char]);
+
+          await delay(800);
+          s2Els[i].classList.remove('active');
+          s2Els[i].classList.add('processed');
+        }
+
+        statusMessage.textContent =
+          'Success! All characters matched perfectly. It is a VALID ANAGRAM.';
+        statusMessage.classList.add('success');
+
+        // Celebrate
+        const allEls = [...s1Els, ...s2Els];
+        allEls.forEach((el) => {
+          el.style.borderColor = 'var(--secondary-color)';
+          el.style.color = 'var(--secondary-color)';
+        });
+
+        visualizeBtn.disabled = false;
+        visualizeBtn.textContent = 'Start Visualization';
+      }
+
+      visualizeBtn.addEventListener('click', visualize);
     </script>
   </body>
 </html>
