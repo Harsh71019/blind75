@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blind 75 - Learning Dashboard</title>
+    <link rel="stylesheet" href="./style.css" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="app">
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h2>Blind 75</h2>
+          <div id="progress-container">
+            Loaded: <span id="problem-count">0</span>
+          </div>
+        </div>
+        <nav id="nav-menu">
+          <!-- Dynamically populated -->
+        </nav>
+      </aside>
+
+      <main class="content-area">
+        <header class="top-bar">
+          <h1 id="current-problem-title">Select a Problem</h1>
+          <div class="tabs">
+            <button class="tab-btn active" data-tab="notes">📝 Notes</button>
+            <button class="tab-btn" data-tab="code">💻 Solution</button>
+            <button class="tab-btn" data-tab="visualizer">🎨 Visualizer</button>
+          </div>
+        </header>
+
+        <div id="tab-content" class="tab-content">
+          <div id="notes-view" class="view-pane active">
+            <div id="markdown-render" class="markdown-body"></div>
+          </div>
+          <div id="code-view" class="view-pane">
+            <pre><code id="code-render" class="language-javascript"></code></pre>
+          </div>
+          <div id="visualizer-view" class="view-pane">
+            <iframe id="vis-frame" src=""></iframe>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>

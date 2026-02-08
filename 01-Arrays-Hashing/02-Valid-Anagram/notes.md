@@ -1,0 +1,161 @@
+# Valid Anagram
+
+**Difficulty:** Easy
+**LeetCode:** [Link](https://leetcode.com/problems/valid-anagram/)
+
+## Problem
+
+Given two strings `s` and `t`, return `true` if `t` is an anagram of `s`, and `false` otherwise.
+
+## Approaches
+
+### 1. Sorting
+
+- Sort both strings and compare them.
+- **Time:** O(N log N)
+- **Space:** O(1) or O(N) (depending on sort)
+
+### 2. Hash Map / Frequency Counter (Optimal)
+
+- Count frequency of each char in `s`.
+- Decrement frequency for each char in `t`.
+- Check if all counts are zero.
+- **Time:** O(N)
+- **Space:** O(1) (since only 26 lowercase characters)
+
+Here is the comprehensive technical explanation formatted as a Markdown file. You can copy the code block below, save it as `valid_anagram_explanation.md`, and view it in any Markdown editor.
+
+````markdown
+# Technical Deep Dive: Valid Anagram Algorithm
+
+## 1. Definition and Problem Statement
+
+Two strings are considered **anagrams** if and only if they meet two strict criteria:
+
+1.  They consist of the exact same set of characters.
+2.  Each character appears with the exact same frequency in both strings.
+
+**The Computational Challenge:**
+We must verify that the character counts of String A map 1:1 to the character counts of String B. The order of characters is irrelevant; the frequency distribution is the only metric that matters.
+
+---
+
+## 2. Algorithm Strategy: The Frequency Counter Pattern
+
+To solve this efficiently, we avoid sorting (which creates a time complexity of $O(n \log n)$). Instead, we utilize a **Frequency Counter** pattern using a Hash Table (in JavaScript, a standard Object).
+
+**The Logic Flow:**
+
+1.  **Fast Failure Check:** If the strings represent different lengths, they cannot have identical frequency distributions. We return `false` immediately to save computational cycles.
+2.  **Mapping Phase:** We iterate through the first string and build a "lookup" object. The keys are the characters, and the values are the integers representing their occurrence count.
+3.  **Reduction Phase:** We iterate through the second string. For every character found, we look it up in our object and decrement the count.
+4.  **Verification:** During the Reduction Phase, if we attempt to find a character that does not exist, or if the count is already at zero, the condition fails.
+
+---
+
+## 3. The Implementation
+
+```javascript
+function validAnagram(str1, str2) {
+  // Phase 1: Structural Integrity Check
+  if (str1.length !== str2.length) {
+    return false;
+  }
+
+  // Initialize Hash Table (Object)
+  const lookup = {};
+
+  // Phase 2: Build Frequency Map
+  for (let i = 0; i < str1.length; i++) {
+    let letter = str1[i];
+    // If letter exists, increment; otherwise initialize at 1
+    lookup[letter] ? (lookup[letter] += 1) : (lookup[letter] = 1);
+  }
+
+  // Phase 3: Compare and Reduce
+  for (let i = 0; i < str2.length; i++) {
+    let letter = str2[i];
+
+    // Critical Logic: Check for existence or exhaustion
+    if (!lookup[letter]) {
+      return false;
+    } else {
+      lookup[letter] -= 1;
+    }
+  }
+
+  // If loop completes, the anagram is valid
+  return true;
+}
+```
+````
+
+---
+
+## 4. Line-by-Line Technical Breakdown
+
+### Phase 1: Structural Integrity
+
+**Code:** `if (str1.length !== str2.length) { return false; }`
+
+- **Explanation:** This acts as a guard clause. Anagrams are strictly permutations of each other. A permutation implies the set size must remain constant. "Cat" (3 bytes) cannot be a permutation of "Cars" (4 bytes).
+- **Performance Impact:** This turns an operation into an (constant time) operation for cases where lengths differ, drastically improving performance for obvious mismatches.
+
+### Phase 2: Building the Frequency Map
+
+**Code:** `const lookup = {};`
+
+- **Explanation:** We initialize an empty object in heap memory. This object will serve as our hash map.
+
+**Code:** `lookup[letter] ? lookup[letter] += 1 : lookup[letter] = 1;`
+
+- **Technical Detail:** This uses the Ternary Operator.
+- **The Logic:** We access the property `letter` on the object.
+- If `lookup[letter]` is `undefined` (falsy), the code executes the second part: `lookup[letter] = 1`. We have now initialized this character.
+- If `lookup[letter]` is a number (truthy), the code executes the first part: `lookup[letter] += 1`. We increment the frequency.
+
+- **Result:** For the word "aab", the object becomes `{ a: 2, b: 1 }`.
+
+### Phase 3: The Zero-Sum Check
+
+**Code:** `if (!lookup[letter]) { return false; }`
+
+- **Technical Detail:** This relies on JavaScript's type coercion of "Falsy" values. In JavaScript, `0` and `undefined` are both treated as `false` in a boolean context.
+- **Scenario A (Character mismatch):** If `str2` contains "z" and `lookup` has no "z", `lookup['z']` returns `undefined`. `!undefined` becomes `true`. The code enters the block and returns `false`.
+- **Scenario B (Frequency mismatch):** Suppose `str1` is "abb" and `str2` is "bbb".
+- First 'b': `lookup['b']` is 2. We decrement to 1.
+- Second 'b': `lookup['b']` is 1. We decrement to 0.
+- Third 'b': `lookup['b']` is 0.
+- When the loop runs for the third 'b', the condition `!0` evaluates to `true`. The code returns `false`.
+
+- **Why this is critical:** This single line handles both "letter not found" and "letter used too many times" simultaneously without needing a second loop to check for remaining zeros.
+
+**Code:** `lookup[letter] -= 1;`
+
+- **Explanation:** By decrementing the counter, we are "consuming" the occurrence. We are effectively proving that `str1` provided the resource and `str2` consumed it perfectly.
+
+---
+
+## 5. Complexity Analysis
+
+To understand why this is the optimized solution, we must analyze Big O notation.
+
+### Time Complexity:
+
+- We iterate through the first string once: .
+- We iterate through the second string once: .
+- Total operations: .
+- In Big O analysis, we drop constants. Therefore, simplifies to \*\*\*\* (Linear Time).
+- _Contrast:_ A sorting approach would be , which is significantly slower as the input size () grows.
+
+### Space Complexity: (Constant Space)
+
+- At first glance, this looks like space because we store characters in an object.
+- **However:** The input is usually comprised of alphabetical characters (lowercase a-z).
+- There are only 26 possible lowercase letters in the English alphabet.
+- Even if the input string is 1 billion characters long, the `lookup` object can never contain more than 26 keys.
+- Because the size of the object has a fixed upper bound (26), the space complexity is considered \*\*\*\* in the context of alphabetical anagrams.
+
+```
+
+```

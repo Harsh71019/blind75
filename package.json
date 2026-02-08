@@ -1,0 +1,29 @@
+{
+  "name": "blind-75-javascript",
+  "version": "1.0.0",
+  "description": "Blind 75 LeetCode Challenge in JavaScript with Visualizations and Spaced Repetition",
+  "type": "module",
+  "scripts": {
+    "test": "vitest",
+    "dev": "vite",
+    "review": "node scripts/review.js"
+  },
+  "keywords": [
+    "leetcode",
+    "blind75",
+    "dsa",
+    "javascript"
+  ],
+  "author": "Harsh",
+  "license": "ISC",
+  "devDependencies": {
+    "vite": "^5.0.12",
+    "vitest": "^1.2.1"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "inquirer": "^9.2.14",
+    "marked": "^17.0.1",
+    "prismjs": "^1.30.0"
+  }
+}

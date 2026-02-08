@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Valid Anagram - Visualization</title>
+    <link rel="stylesheet" href="../../../style.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Valid Anagram</h1>
+      <div id="controls">
+        <button id="run-btn">Run Visualization</button>
+      </div>
+      <div
+        id="status-message"
+        style="margin-top: 1rem; color: var(--accent-color)"
+      >
+        Ready to run...
+      </div>
+
+      <div style="display: flex; gap: 2rem; margin-top: 2rem">
+        <div>
+          <h3>String S</h3>
+          <div class="visualization-container" id="s-container"></div>
+        </div>
+        <div>
+          <h3>String T</h3>
+          <div class="visualization-container" id="t-container"></div>
+        </div>
+      </div>
+    </main>
+    <script type="module">
+      import {
+        createArrayElement,
+        logStatus,
+        delay,
+      } from '../../../utils/visualizer-utils.js';
+
+      const s = 'anagram';
+      const t = 'nagaram';
+
+      // Simple usage example
+      const sContainer = document.getElementById('s-container');
+      s.split('').forEach((char) =>
+        sContainer.appendChild(createArrayElement(char)),
+      );
+
+      const tContainer = document.getElementById('t-container');
+      t.split('').forEach((char) =>
+        tContainer.appendChild(createArrayElement(char)),
+      );
+
+      document.getElementById('run-btn').addEventListener('click', () => {
+        logStatus(
+          'This is a template. Implement animation login in the script tag!',
+        );
+      });
+    </script>
+  </body>
+</html>

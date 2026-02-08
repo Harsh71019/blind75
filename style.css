@@ -1,0 +1,266 @@
+:root {
+  --bg-color: #0d1117;
+  --sidebar-bg: #161b22;
+  --text-color: #c9d1d9;
+  --text-dim: #8b949e;
+  --accent-color: #58a6ff;
+  --success-color: #2ea043;
+  --error-color: #f85149;
+  --box-bg: #161b22;
+  --border-color: #30363d;
+  --hover-color: #21262d;
+  --active-color: #1f6feb;
+  --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: var(--font-family);
+  margin: 0;
+  height: 100vh;
+  /* Removed overflow: hidden from here to allow iframes to scroll */
+}
+
+/* Dashboard Layout Wrapper */
+#app {
+  display: flex;
+  height: 100%;
+  overflow: hidden; /* App Shell logic handles scrolling */
+}
+
+/* Styles compatible with Visualizer (which doesn't have #app) */
+main {
+  width: 100%;
+  max-width: 800px;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+h1 {
+  color: var(--accent-color);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 1rem;
+}
+
+button {
+  background-color: var(--success-color);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+button:hover {
+  filter: brightness(1.1);
+}
+
+.visualization-container {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.array-item {
+  width: 50px;
+  height: 50px;
+  background-color: var(--box-bg);
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.array-item.highlight {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 10px var(--accent-color);
+}
+
+.array-item.found {
+  background-color: var(--success-color);
+  border-color: var(--success-color);
+  color: white;
+}
+
+/* Sidebar Specifics */
+.sidebar {
+  width: 300px;
+  background-color: var(--sidebar-bg);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.sidebar-header h2 {
+  margin: 0;
+  color: var(--accent-color);
+}
+
+#nav-menu {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem 0;
+}
+
+.topic-group {
+  margin-bottom: 1rem;
+}
+
+.topic-title {
+  padding: 0.5rem 1.5rem;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.nav-item {
+  display: block;
+  padding: 0.5rem 1.5rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  color: var(--text-color);
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.nav-item:hover {
+  background-color: var(--hover-color);
+}
+
+.nav-item.active {
+  background-color: var(--active-color);
+  color: white;
+}
+
+/* Main Content Area in Dashboard */
+.content-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.top-bar {
+  padding: 1rem 2rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--bg-color);
+}
+
+.top-bar h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  border: none;
+  padding: 0;
+}
+
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.tab-btn {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-dim);
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.tab-btn:hover {
+  color: var(--text-color);
+  border-color: var(--text-color);
+}
+
+.tab-btn.active {
+  background-color: var(--accent-color);
+  color: white;
+  border-color: var(--accent-color);
+}
+
+.tab-content {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  background-color: #0d1117;
+}
+
+.view-pane {
+  display: none;
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.view-pane.active {
+  display: block;
+}
+
+/* Specific Views */
+#code-view {
+  padding: 0;
+}
+#code-view pre {
+  margin: 0;
+  height: 100%;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+#visualizer-view {
+  padding: 0;
+  background-color: white;
+}
+
+#vis-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Markdown Override */
+.markdown-body {
+  max-width: 800px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+.markdown-body h1,
+.markdown-body h2 {
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.3em;
+  margin-bottom: 1em;
+}
+.markdown-body code {
+  background-color: rgba(110, 118, 129, 0.4);
+  padding: 0.2em 0.4em;
+  border-radius: 6px;
+}
+.markdown-body pre {
+  background-color: #161b22;
+  padding: 16px;
+  border-radius: 6px;
+  overflow: auto;
+  margin-bottom: 1em;
+}

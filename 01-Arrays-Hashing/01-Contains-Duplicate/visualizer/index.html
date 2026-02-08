@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contains Duplicate - Visualization</title>
+    <link rel="stylesheet" href="../../../style.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Contains Duplicate</h1>
+      <div id="controls">
+        <button id="run-btn">Run Visualization</button>
+        <button id="reset-btn">Reset</button>
+      </div>
+
+      <div
+        id="status-message"
+        style="margin-top: 1rem; color: var(--accent-color); height: 1.5rem"
+      >
+        Ready to run...
+      </div>
+
+      <div class="visualization-container" id="array-container">
+        <!-- Array elements will be generated here -->
+      </div>
+
+      <div style="margin-top: 2rem">
+        <h3>Hash Set View:</h3>
+        <div
+          class="visualization-container"
+          id="set-container"
+          style="border-top: 1px dashed var(--border-color); padding-top: 1rem"
+        >
+          <!-- Set items -->
+        </div>
+      </div>
+    </main>
+    <script type="module" src="./script.js"></script>
+  </body>
+</html>
