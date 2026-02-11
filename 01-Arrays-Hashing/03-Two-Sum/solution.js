@@ -4,14 +4,16 @@
  * @return {number[]}
  */
 export function twoSum(nums, target) {
-  const prevMap = new Map(); // val -> index
+  let obj = {};
 
   for (let i = 0; i < nums.length; i++) {
-    const diff = target - nums[i];
-    if (prevMap.has(diff)) {
-      return [prevMap.get(diff), i];
+    let currentValue = nums[i];
+    if (obj[currentValue] !== undefined) {
+      return [obj[currentValue], i];
+    } else {
+      let numberToFind = target - currentValue;
+      obj[numberToFind] = i;
     }
-    prevMap.set(nums[i], i);
   }
   return [];
 }
