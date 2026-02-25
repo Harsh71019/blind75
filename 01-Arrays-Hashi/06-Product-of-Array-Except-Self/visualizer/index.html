@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product of Array Except Self - Visualizer</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #f4f4f9;
+      }
+      h1 {
+        text-align: center;
+      }
+      .container {
+        max-width: 860px;
+        margin: 0 auto;
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .input-group {
+        margin-bottom: 12px;
+      }
+      label {
+        display: block;
+        margin-bottom: 4px;
+        font-weight: bold;
+      }
+      input {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+      button {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 8px;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+      .section {
+        margin-top: 24px;
+      }
+      .section h3 {
+        margin-bottom: 8px;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 4px;
+      }
+      .array-container {
+        display: flex;
+        gap: 8px;
+        margin-top: 10px;
+        min-height: 50px;
+      }
+      .cell {
+        width: 60px;
+        height: 60px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid #ccc;
+        border-radius: 6px;
+        font-size: 18px;
+        font-weight: bold;
+        background-color: #fff;
+        transition:
+          background-color 0.3s,
+          transform 0.2s;
+        position: relative;
+      }
+      .cell .index {
+        position: absolute;
+        top: -20px;
+        font-size: 12px;
+        color: #888;
+        font-weight: normal;
+      }
+      .cell.highlight {
+        background-color: #ffd700;
+        transform: scale(1.05);
+      }
+      .cell.active {
+        background-color: #add8e6;
+        border-color: #007bff;
+      }
+      .cell.result {
+        background-color: #28a745;
+        color: white;
+        border-color: #1e7e34;
+      }
+      #log {
+        margin-top: 20px;
+        padding: 10px;
+        background: #eee;
+        border-radius: 4px;
+        height: 150px;
+        overflow-y: auto;
+        font-family: monospace;
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Product of Array Except Self</h1>
+
+      <div class="input-group">
+        <label for="numsInput">Array (comma separated):</label>
+        <input type="text" id="numsInput" value="1,2,3,4" />
+      </div>
+      <button onclick="visualize()">Run Visualization</button>
+
+      <div class="section">
+        <h3>Input Array</h3>
+        <div class="array-container" id="input-array"></div>
+      </div>
+
+      <div class="section">
+        <h3>Prefix Products</h3>
+        <div class="array-container" id="prefix-array"></div>
+      </div>
+
+      <div class="section">
+        <h3>Suffix Products</h3>
+        <div class="array-container" id="suffix-array"></div>
+      </div>
+
+      <div class="section">
+        <h3>Result Array</h3>
+        <div class="array-container" id="result-array"></div>
+      </div>
+
+      <div id="log"></div>
+    </div>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
